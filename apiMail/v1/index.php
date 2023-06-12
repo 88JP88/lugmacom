@@ -159,7 +159,50 @@ Flight::route('GET /getInboxMail/@id', function ($id) {
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id = '$id'  or r.copy LIKE'%$id%' and rr.category_id='inbox' ORDER BY r.created_at DESC LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id = '$id' and rr.category_id='inbox' ORDER BY r.created_at DESC LIMIT 100");
+       
+
+        $mails=[];
+ 
+        while($row = $query->fetch_assoc())
+        {
+                $mail=[
+                    'mail_id' => $row['mail_id'],
+                    'sender_id' => $row['sender_id'],
+                    'receiver_id' => $row['receiver_id'],
+                    'name' => $row['name'],
+                    'content' => $row['content'],
+                    'send' => $row['created_at'],
+                    'category_id' => $row['category_id'],
+                    'type' => $row['type'],
+                    'parent_id' => $row['parent_id'],
+                    'copy' => $row['copy']
+                ];
+                
+                array_push($mails,$mail);
+                
+        }
+        $row=$query->fetch_assoc();
+        //echo $repos;
+        echo json_encode(['mail_constructor'=>$mails]);
+       
+  
+  // echo $uri; // muestra "/mi-pagina.php?id=123"
+
+       
+   
+
+});
+
+
+Flight::route('GET /getCopyMail/@id', function ($id) {
+    
+    header("Access-Control-Allow-Origin: *");
+    $conectar=conn();
+    $uri = $_SERVER['REQUEST_URI'];
+
+
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where r.copy LIKE'%$id%' and rr.category_id='inbox' ORDER BY r.created_at DESC LIMIT 100");
        
 
         $mails=[];
