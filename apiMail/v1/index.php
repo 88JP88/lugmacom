@@ -192,7 +192,7 @@ Flight::route('GET /getSendMail/@id', function ($id) {
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.type='main' and rr.category_id in ('inbox') ORDER BY r.created_at DESC  LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.type='main' and rr.category_id in ('inbox','send') ORDER BY r.created_at DESC  LIMIT 100");
        
 
         $mails=[];
