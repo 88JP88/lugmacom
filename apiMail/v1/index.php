@@ -140,14 +140,14 @@ Flight::route('GET /getInboxMail/@id', function ($id) {
 });
 
 
-Flight::route('GET /getCopyMail/@id', function ($id) {
+Flight::route('GET /getCopyMail/@id/@id2', function ($id,$id2) {
     
     header("Access-Control-Allow-Origin: *");
     $conectar=conn();
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy,rr.general_id FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id ='$id' and rr.type='copy' and rr.category_id='inbox' ORDER BY r.created_at DESC LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy,rr.general_id FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id ='$id' and rr.type='copy' and rr.category_id='inbox' or rr.profile_id ='$id2' and rr.type='copy' and rr.category_id='inbox' ORDER BY r.created_at DESC LIMIT 100");
        
 
         $mails=[];
@@ -230,14 +230,14 @@ Flight::route('GET /getSendMail/@id', function ($id) {
 
 
 
-Flight::route('GET /getImportantMail/@id', function ($id) {
+Flight::route('GET /getImportantMail/@id/@id2', function ($id,$id2) {
     
     header("Access-Control-Allow-Origin: *");
     $conectar=conn();
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.category_id='important' ORDER BY r.created_at DESC  LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where rr.profile_id = '$id' and rr.category_id='important' or rr.profile_id = '$id2' and rr.category_id='important' ORDER BY r.created_at DESC  LIMIT 100");
        
 
         $mails=[];
@@ -273,59 +273,14 @@ Flight::route('GET /getImportantMail/@id', function ($id) {
 
 });
 
-Flight::route('GET /getSpamMail/@id', function ($id) {
+Flight::route('GET /getSpamMail/@id/@id2', function ($id,$id2) {
     
     header("Access-Control-Allow-Origin: *");
     $conectar=conn();
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.category_id='spam' ORDER BY r.created_at DESC  LIMIT 100");
-       
-
-        $mails=[];
- 
-        while($row = $query->fetch_assoc())
-        {
-                $mail=[
-                    'mail_id' => $row['mail_id'],
-                    'sender_id' => $row['sender_id'],
-                    'receiver_id' => $row['receiver_id'],
-                    'name' => $row['name'],
-                    'content' => $row['content'],
-                    'send' => $row['created_at'],
-                    'category_id' => $row['category_id'],
-                    'type' => $row['type'],
-                    'parent_id' => $row['parent_id'],
-                    'copy' => $row['copy'],
-                    'general_id' => $row['general_id']
-                ];
-                
-                array_push($mails,$mail);
-                
-        }
-        $row=$query->fetch_assoc();
-        //echo $repos;
-        echo json_encode(['mail_constructor'=>$mails]);
-       
-  
-  // echo $uri; // muestra "/mi-pagina.php?id=123"
-
-       
-   
-
-});
-
-
-
-Flight::route('GET /getReadMail/@id', function ($id) {
-    
-    header("Access-Control-Allow-Origin: *");
-    $conectar=conn();
-    $uri = $_SERVER['REQUEST_URI'];
-
-
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.category_id='viewed' ORDER BY r.created_at DESC  LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where rr.profile_id = '$id' and rr.category_id='spam' or rr.profile_id = '$id2' and rr.category_id='spam' ORDER BY r.created_at DESC  LIMIT 100");
        
 
         $mails=[];
@@ -362,14 +317,59 @@ Flight::route('GET /getReadMail/@id', function ($id) {
 });
 
 
-Flight::route('GET /getReciclerMail/@id', function ($id) {
+
+Flight::route('GET /getReadMail/@id/@id2', function ($id,$id2) {
     
     header("Access-Control-Allow-Origin: *");
     $conectar=conn();
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where r.sender_id = '$id' and rr.category_id='recicler' or r.copy like '%$id%' and rr.category_id='recicler' ORDER BY r.created_at DESC  LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where rr.profile_id = '$id' and rr.category_id='viewed' or rr.profile_id = '$id2' and rr.category_id='viewed' ORDER BY r.created_at DESC  LIMIT 100");
+       
+
+        $mails=[];
+ 
+        while($row = $query->fetch_assoc())
+        {
+                $mail=[
+                    'mail_id' => $row['mail_id'],
+                    'sender_id' => $row['sender_id'],
+                    'receiver_id' => $row['receiver_id'],
+                    'name' => $row['name'],
+                    'content' => $row['content'],
+                    'send' => $row['created_at'],
+                    'category_id' => $row['category_id'],
+                    'type' => $row['type'],
+                    'parent_id' => $row['parent_id'],
+                    'copy' => $row['copy'],
+                    'general_id' => $row['general_id']
+                ];
+                
+                array_push($mails,$mail);
+                
+        }
+        $row=$query->fetch_assoc();
+        //echo $repos;
+        echo json_encode(['mail_constructor'=>$mails]);
+       
+  
+  // echo $uri; // muestra "/mi-pagina.php?id=123"
+
+       
+   
+
+});
+
+
+Flight::route('GET /getReciclerMail/@id/@id2', function ($id,$id2) {
+    
+    header("Access-Control-Allow-Origin: *");
+    $conectar=conn();
+    $uri = $_SERVER['REQUEST_URI'];
+
+
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,r.type,r.parent_id,r.copy,rr.general_id FROM mail_general r  JOIN mail_general_info rr ON r.mail_id=rr.mail_id where rr.profile_id = '$id' and rr.category_id='recicler' or rr.profile_id = '$id2' and rr.category_id='recicler' ORDER BY r.created_at DESC  LIMIT 100");
        
 
         $mails=[];
