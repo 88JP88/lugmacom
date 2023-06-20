@@ -96,14 +96,14 @@ Flight::route('POST /putCategoryMail', function () {
 
 
 
-Flight::route('GET /getInboxMail/@id', function ($id) {
+Flight::route('GET /getInboxMail/@id/@id2', function ($id,$id2) {
     
     header("Access-Control-Allow-Origin: *");
     $conectar=conn();
     $uri = $_SERVER['REQUEST_URI'];
 
 
-    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy,rr.general_id FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id = '$id' and rr.category_id='inbox' and rr.type in ('destine','copy') ORDER BY r.created_at DESC LIMIT 100");
+    $query= mysqli_query($conectar,"SELECT r.mail_id,r.sender_id,r.receiver_id,r.name,r.content,r.created_at,rr.category_id,rr.type,r.parent_id,r.copy,rr.general_id FROM mail_general r JOIN mail_general_info rr ON rr.mail_id=r.mail_id where rr.profile_id = '$id' and rr.category_id='inbox' and rr.type in ('destine','copy') or rr.profile_id = '$id2' and rr.category_id='inbox' and rr.type in ('destine','copy') ORDER BY r.created_at DESC LIMIT 100");
        
 
         $mails=[];
